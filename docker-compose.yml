@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  deployer:
+    build:
+      context: .
+      args:
+        GIT_REF: master
+    container_name: sammcore-deployer
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
