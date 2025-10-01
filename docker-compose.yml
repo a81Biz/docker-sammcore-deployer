@@ -1,12 +1,24 @@
-version: "3.9"
 services:
-  deployer:
+  deployer-backend:
     build:
-      context: .
-      args:
-        GIT_REF: master
-    container_name: sammcore-deployer
-    ports:
-      - "8080:8080"
+      context: ./backend
+    container_name: deployer-backend
     environment:
-      - PORT=8080
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    ports:
+      - "8081:8080"
+    networks:
+      - deployer-net
+
+  deployer-frontend:
+    build:
+      context: ./frontend
+    container_name: deployer-frontend
+    ports:
+      - "8082:80"
+    networks:
+      - deployer-net
+
+networks:
+  deployer-net:
+    driver: bridge
