@@ -5,7 +5,7 @@ RUN apk add --no-cache git
 RUN git clone --branch master --depth 1 https://github.com/a81Biz/sammcore-deployer.git appsrc
 
 # --- Stage: build Go backend ---
-FROM golang:1.22-alpine AS build-backend
+FROM golang:1.23-alpine AS builder
 WORKDIR /app
 COPY --from=clone /src/appsrc/backend/ ./backend/
 WORKDIR /app/backend
