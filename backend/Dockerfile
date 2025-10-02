@@ -9,11 +9,11 @@ FROM golang:1.22-alpine AS build-backend
 WORKDIR /app
 COPY --from=clone /src/appsrc/backend/ ./backend/
 WORKDIR /app/backend
-RUN go mod tidy && go build -o /app/backend main.go
+RUN go mod tidy && go build -o /app/deployer main.go
 
 # --- Runtime image ---
 FROM alpine:3.20
 WORKDIR /app
-COPY --from=build-backend /app/backend /app/backend
+COPY --from=build-backend /app/deployer /app/deployer
 EXPOSE 8080
-CMD ["/app/backend"]
+CMD ["/app/deployer"]
