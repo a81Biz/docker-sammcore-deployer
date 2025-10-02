@@ -11,10 +11,15 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env:
+      OWNER_LC: ${{ github.repository_owner }}
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Force lowercase owner
+        run: echo "OWNER_LC=${OWNER_LC,,}" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -30,8 +35,8 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner && toLower(github.repository_owner) }}/sammcore-deployer-frontend:latest
-            ghcr.io/${{ github.repository_owner && toLower(github.repository_owner) }}/sammcore-deployer-frontend:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/sammcore-deployer-frontend:latest
+            ghcr.io/${{ env.OWNER_LC }}/sammcore-deployer-frontend:${{ github.sha }}
 
       - name: Build and push backend
         uses: docker/build-push-action@v6
@@ -40,5 +45,5 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner && toLower(github.repository_owner) }}/sammcore-deployer-backend:latest
-            ghcr.io/${{ github.repository_owner && toLower(github.repository_owner) }}/sammcore-deployer-backend:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/sammcore-deployer-backend:latest
+            ghcr.io/${{ env.OWNER_LC }}/sammcore-deployer-backend:${{ github.sha }}
